@@ -4,3 +4,4 @@ RewriteCond %{REQUEST_FILENAME} !-d
 
 RewriteRule .* index.php git [L]
 #for test second upload
+#for test third upload
