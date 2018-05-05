@@ -21,5 +21,10 @@ class Helper {
         }
         return '<a href="' . route::getBP() . $path .'">' .$name . '</a>';
     }
-    
+
+    public static function redirect($path) {
+        $server_host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+        $url = $server_host . route::getBP() . $path;
+        header("Location: $url");
+    }
 }

@@ -49,13 +49,20 @@ class Model {
     public function select() {
         return $this->collection;
     }
-    
+
+    public function selectLast() {
+        $sql = "SELECT * FROM $this->table_name ORDER BY id DESC LIMIT ?;";
+        $db = new DB();
+        $params = array(1);
+        return $db->query($sql, $params)[0];
+    }
+
     public function selectFirst() {
         return isset($this->collection[0]) ? $this->collection[0] : null;
     }
 
     public function addItem($values) {
-        $sql = "INSERT INTO $this->table_name (sku,name,price,qty) VALUES ('$values[sku]', '$values[name]', '$values[price]', $values[qty]);";
+        $sql = "INSERT INTO $this->table_name (sku,name,price,qty,description) VALUES ('$values[sku]','$values[name]','$values[price]','$values[qty]','$values[description]');";
         $db = new DB();
         $params = array();
         $db->query($sql, $params);
@@ -75,10 +82,17 @@ class Model {
     }
 
     public function saveItem($id,$values) {
-        $sql = "UPDATE $this->table_name SET sku = ?, name = ?, price = ?, qty = ? WHERE id = '$id';";
-        foreach ($values as $value) {
+        $values['id']=$id;
+        $sql = null;
+        foreach ($values as $key => $value) {
+            if ($key == 'id') {
+                $sql = rtrim($sql,",")." WHERE id = ?;";
+            } else {
+                $sql .= " $key = ?,";
+            }
             $parameters[] = $value;
         }
+        $sql = "UPDATE $this->table_name SET $sql";
         $db = new DB();
         return $db->query($sql, $parameters);
     }
@@ -87,13 +101,13 @@ class Model {
         $values = [];
         $columns = $this->getColumns();
         foreach ($columns as $column) {
-            if ( isset($_POST[$column]) && $column !== $this->id_column ) {
+            /*if ( isset($_POST[$column]) && $column !== $this->id_column ) {
                 $values[$column] = $_POST[$column];
-            }
-            /*$column_value = filter_input(INPUT_POST, $column);
-            if ($column_value && $column !== $this->id_column ) {
-                $values[$column] = $column_value;
             }*/
+            $column_value = filter_input(INPUT_POST, $column);
+            if ($column_value && $column === $this->id_column ) { continue;}
+            $values[$column] = ($column === 'description') ? htmlspecialchars($column_value) :  filter_var($column_value,FILTER_SANITIZE_STRING);
+            $values[$column] = trim($values[$column]);
         }
         return $values;
     }

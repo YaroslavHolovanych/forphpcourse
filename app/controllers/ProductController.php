@@ -30,7 +30,6 @@ class ProductController extends Controller {
         $this->setTitle("Редагування товару");
         $id = filter_input(INPUT_POST, 'id');
         if ($id) {
-            //echo "EditAction"."<br>";
             $values = $model->getPostValues();
             $this->registry['saved'] = 1;
             $model->saveItem($id,$values);
@@ -59,16 +58,17 @@ class ProductController extends Controller {
     public function AddAction() {
         if($_POST == null) {
             $this->setTitle("Додавання товару");
-            $this->setView();
+            //$this->setView();
+            //$this->renderLayout();
         } else {
+            //var_dump($_POST);
             $model = $this->getModel('Product');
             if ($values = $model->getPostValues()) {
                 $model->addItem($values);
+                Helper::redirect("/product/edit?id={$model->selectLast()['id']}&is=new");
             }
-            $this->registry['products'] = $this->getModel('Product')->initCollection()
-                ->sort($this->getSortParams())->getCollection()->select();
-            $this->setView('list');
         }
+        $this->setView();
         $this->renderLayout();
     }
     

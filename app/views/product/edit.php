@@ -1,18 +1,22 @@
+<?php
+    if ($this->registry['saved'] != 0) {
+        Helper::redirect('/product/list');
+    }
+    if (isset($_GET['is']) == 'new') {
+        echo '<p style="color: green; font-size: 25px">Продукт збережений</p>';
+    }
+?>
 
-<div class="product" action="product/list">
+<div class="product" action="product/edit">
     <form method="post">
-        <p>ID : <input type="text" name="id" value="<?php echo $this->registry['product']['id']?>"></p>
+        <input type="hidden" name="id" value="<?php echo $this->registry['product']['id']?>">
+        <p>ID : <?php echo $this->registry['product']['id']?></p>
         <p>SKU : <input type="text" name="sku" value="<?php echo $this->registry['product']['sku']?>"></p>
         <p>Назва товару : <input type="text" name="name" value="<?php echo $this->registry['product']['name']?>"></p>
-        <p>Ціна : <input type="text" name="price" value="<?php echo $this->registry['product']['price']?>"></p>
-        <p>Кількість : <input type="text" name="qty" value="<?php echo $this->registry['product']['qty']?>"></p>
-        <p>
-            <?php if ($this->registry['saved'] == 0) :?>
-                <input type="submit" value="Зберегти продукт">
-            <?php else: ?>
-                <h2><?php echo Helper::simpleLink('/product/list', 'Назад'); ?></h2>
-            <?php endif; ?>
-
-        </p>
+        <p>Ціна : <input type="number" name="price" min="0.00" step="0.01" value="<?php echo $this->registry['product']['price']?>"></p>
+        <p>Кількість : <input type="number" name="qty" min="0.000" step="0.001" value="<?php echo $this->registry['product']['qty']?>"></p>
+        <p>Опис : <input type="text" name="description" value="<?php echo $this->registry['product']['description']?>"></p>
+        <input type="submit" value="Зберегти продукт">
+        <input type="reset" value="Початкові значення">
     </form>
 </div>
