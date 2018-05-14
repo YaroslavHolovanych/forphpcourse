@@ -5,6 +5,7 @@ class Controller {
     protected $title = null; 
     protected $view = null; 
     protected $registry = array();
+    protected $customer = array();
     
     public function setTitle($title) {
         $this->title = $title;
@@ -26,6 +27,7 @@ class Controller {
     }
     
     public function renderPartialview($view_name) {
+        $this->customer = Helper::getCustomer();
         $view_path = ROOT . '/app/layouts/' . $view_name . '.php';
         if(file_exists($view_path)) {
             include $view_path;

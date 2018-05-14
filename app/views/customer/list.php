@@ -16,16 +16,18 @@
         <td class="th">Ел. адреса</td>
         <td class="th">Телефон</td>
     </tr>
-<?php $customers =  $this->registry['customer'];
-foreach($customers as $customer): ?>
-    <tr>
-        <td><?php echo $customer['first_name']?></td>
-        <td><?php echo $customer['last_name']?></td>
-        <td><?php echo $customer['city']?></td>
-        <td><?php echo $customer['email']?></td>
-        <td><?php echo $customer['telephone']?></td>
-    </tr>
-<?php endforeach; ?>
+    <?php if (Helper::isAdmin()) : ?>
+        <?php $customers =  $this->registry['customer'];
+        foreach($customers as $customer): ?>
+            <tr>
+                <td><?php echo $customer['first_name']?></td>
+                <td><?php echo $customer['last_name']?></td>
+                <td><?php echo $customer['city']?></td>
+                <td><?php echo $customer['email']?></td>
+                <td><?php echo $customer['telephone']?></td>
+            </tr>
+        <?php endforeach; ?>
+    <?php endif; ?>
 </table>
 
 

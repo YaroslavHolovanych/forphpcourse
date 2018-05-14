@@ -15,7 +15,9 @@
         </div>
 
         <div id="header">
-            <?php $this->renderPartialview('menu'); ?>
+
+            <?php //$customer = Helper::getCustomer();//echo md5('123456789'); //25f9e794323b453885f5181f1b624d0b
+            $this->renderPartialview('menu'); ?>
         </div>
         <div class="container">
             <?php $this->renderView(); ?>

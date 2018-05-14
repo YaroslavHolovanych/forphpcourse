@@ -4,7 +4,7 @@ class Route {
 
     private static $controller = null;
     private static $action = null;
-    
+
     public static function getBP() {
         return self::getBasePath();
     }
@@ -31,12 +31,12 @@ class Route {
     }
 
     public static function Start() {
-           
+
+
             // витягуємо маршрут із строки запроса
             $request = explode('?', $_SERVER['REQUEST_URI']);
             $uri = $request[0];
             self::getRoute($uri);
-
             // визначаємо імена класу контролера та методу екшен
             $controller_name = ucfirst(self::$controller) .'Controller';
             $action_name = self::$action . 'Action';

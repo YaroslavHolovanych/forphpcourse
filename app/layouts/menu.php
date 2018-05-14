@@ -11,8 +11,15 @@
     <?php endforeach; ?>
     </ul>
     <ul class="nav navbar-nav navbar-right">
-        <li><a href="<?php echo route::getBP();?>/customer/register/"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-        <li><a href="<?php echo route::getBP();?>/customer/login/"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        <?php if ($this->customer !== null):?>
+            <li><a href="<?php echo route::getBP();?>/customer/account/"><span class="glyphicon glyphicon-user"></span>
+                    <?php echo "{$this->customer['first_name']} {$this->customer['last_name']}"; if (Helper::isAdmin()) {echo ", Administrator";};?>
+                </a></li>
+            <li><a href="<?php echo route::getBP();?>/customer/logout/"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+        <?php else:?>
+            <li><a href="<?php echo route::getBP();?>/customer/register/"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li><a href="<?php echo route::getBP();?>/customer/login/"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        <?php endif;?>
     </ul>
   </div>
 </nav>

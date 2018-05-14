@@ -35,6 +35,13 @@ class Model {
     }
 
     public function filter($params) {
+        $this->params = [];
+        $this->sql .= ' WHERE';
+        foreach ($params as $key=>$value) {
+            $this->sql .= " $key = ? AND";
+            $this->params[] = $value;
+        }
+        $this->sql = rtrim($this->sql,'AND');
         return $this;
     }
     
@@ -66,6 +73,21 @@ class Model {
         $db = new DB();
         $params = array();
         $db->query($sql, $params);
+    }
+    public function addCustomer($values) {
+        $sqlLeft = "INSERT INTO $this->table_name (";
+        $sqlRight = ") VALUES (";
+        $params = array();
+        foreach ($values as $nameField=>$valueField) {
+            if ($nameField === 'passwordCheck') {continue;}
+            $sqlLeft .= $nameField.',';
+            $sqlRight .= '?,';
+            $params[] = ($nameField === 'password') ? md5($valueField) : $valueField;
+        }
+
+        $sqlLeft = rtrim($sqlLeft,',').rtrim($sqlRight,',').');';
+        $db = new DB();
+        $db->query($sqlLeft, $params);
     }
 
     public function deleteItem($id) {
@@ -111,5 +133,4 @@ class Model {
         }
         return $values;
     }
-
 }

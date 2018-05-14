@@ -25,6 +25,9 @@ class ProductController extends Controller {
     }
 
     public function EditAction() {
+        if (!Helper::isAdmin()) {
+            Helper::redirect('/product/list');
+        }
         $model = $this->getModel('Product');
         $this->registry['saved'] = 0;
         $this->setTitle("Редагування товару");
@@ -33,21 +36,25 @@ class ProductController extends Controller {
             $values = $model->getPostValues();
             $this->registry['saved'] = 1;
             $model->saveItem($id,$values);
+            Helper::redirect('/product/list');
         }
         $this->registry['product'] = $model->getItem($this->getId());
         $this->setView();
         $this->renderLayout();
     }
     public function DeleteAction() {
+        if (!Helper::isAdmin()) {
+            Helper::redirect('/product/list');
+        }
         $model = $this->getModel('Product');
         $this->registry['delete'] = 0;
         $this->setTitle("Видалення товару");
         $id = filter_input(INPUT_GET, 'id');
         if (filter_input(INPUT_GET, 'delete')) {
-            echo "DeleteAction"."<br>";
             $this->registry['delete'] = 1;
             $model->deleteItem($id);
             $this->registry['product'] = null;
+            Helper::redirect('/product/list');
         } else {
             $this->registry['product'] = $model->getItem($this->getId());
         }
@@ -56,6 +63,9 @@ class ProductController extends Controller {
         $this->renderLayout();
     }
     public function AddAction() {
+        if (!Helper::isAdmin()) {
+            Helper::redirect('/product/list');
+        }
         if($_POST == null) {
             $this->setTitle("Додавання товару");
             //$this->setView();
@@ -73,20 +83,35 @@ class ProductController extends Controller {
     }
     
     public function getSortParams() {
+        $idCustomer = Helper::getCustomer()['customer_id'];
         $params = [];
         $sortfirst = filter_input(INPUT_POST, 'sortfirst');
+        $sortsecond = filter_input(INPUT_POST, 'sortsecond');
+        if (isset($_COOKIE['customSortParams'][$idCustomer])) {
+            $customSort = $_COOKIE['customSortParams'][$idCustomer];
+            $customSort = explode(',',$customSort);
+            if ($_COOKIE['PHPSESSID'] != $customSort[0]) {
+                $sortfirst = $customSort[1];
+                $sortsecond = $customSort[2];
+            }
+        }
+
         if ($sortfirst === "price_DESC") {
             $params['price'] = 'DESC';
         } else {
             $params['price'] = 'ASC';
         }
-        $sortsecond = filter_input(INPUT_POST, 'sortsecond');
+
         if ($sortsecond === "qty_DESC") {
             $params['qty'] = 'DESC';
         } else {
             $params['qty'] = 'ASC';
         }
-        
+
+        if ($idCustomer) {
+            setcookie("customSortParams[$idCustomer]","$_COOKIE[PHPSESSID],price_$params[price],qty_$params[qty]");
+        }
+
         return $params;
 
     }
@@ -133,6 +158,4 @@ class ProductController extends Controller {
         */
         return filter_input(INPUT_GET, 'id');
     }
-    
-    
 }

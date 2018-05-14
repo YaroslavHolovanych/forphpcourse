@@ -1,7 +1,4 @@
 <?php
-    if ($this->registry['saved'] != 0) {
-        Helper::redirect('/product/list');
-    }
     if (isset($_GET['is']) == 'new') {
         echo '<p style="color: green; font-size: 25px">Продукт збережений</p>';
     }

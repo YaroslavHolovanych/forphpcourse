@@ -1,4 +1,4 @@
-<div class="product" action="/product/add";?>
+<div class="product" action="/product/add">
     <form method="post">
         <!--<input type="hidden" name="id" value="new">-->
         <p>SKU : <input type="text" name="sku" value="<?php echo 'sku'.date('Hms')?>"></p>
